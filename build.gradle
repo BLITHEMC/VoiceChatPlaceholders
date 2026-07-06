@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.bocktom'
-version = '1.1'
+version = project.plugin_version + "+" + project.paper_version
 description = 'VoiceChatPlaceholders'
 
 repositories {
@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly libs.io.papermc.paper.paper.api
-    compileOnly libs.de.maxhenkel.voicechat.voicechat.api
-    compileOnly libs.me.clip.placeholderapi
+    compileOnly("io.papermc.paper:paper-api:${paper_version}.build.+")
+    compileOnly("de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}")
+    compileOnly("me.clip:placeholderapi:${placeholderapi_version}")
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_21

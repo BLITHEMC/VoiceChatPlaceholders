@@ -1,9 +1,0 @@
-[versions]
-de-maxhenkel-voicechat-voicechat-api = "2.6.0"
-io-papermc-paper-paper-api = "1.21.11-R0.1-SNAPSHOT"
-me-clip-placeholderapi = "2.11.6"
-
-[libraries]
-de-maxhenkel-voicechat-voicechat-api = { module = "de.maxhenkel.voicechat:voicechat-api", version.ref = "de-maxhenkel-voicechat-voicechat-api" }
-io-papermc-paper-paper-api = { module = "io.papermc.paper:paper-api", version.ref = "io-papermc-paper-paper-api" }
-me-clip-placeholderapi = { module = "me.clip:placeholderapi", version.ref = "me-clip-placeholderapi" }
