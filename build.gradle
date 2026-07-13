@@ -29,6 +29,20 @@ dependencies {
     compileOnly("me.clip:placeholderapi:${placeholderapi_version}")
 }
 
+tasks {
+    runServer {
+        // Configure the Minecraft version for our task.
+        // This is the only required configuration besides applying the plugin.
+        // Your plugin's jar (or shadowJar if present) will be used automatically.
+        minecraftVersion(paper_version)
+
+        downloadPlugins {
+            modrinth("placeholderapi", placeholderapi_version)
+            modrinth("simple-voice-chat", "bukkit-${voicechat_api_version}")
+        }
+    }
+}
+
 java.sourceCompatibility = JavaVersion.VERSION_21
 def targetJavaVersion = 25
 java {

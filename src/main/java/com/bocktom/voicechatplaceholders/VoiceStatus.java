@@ -1,6 +1,6 @@
 package com.bocktom.voicechatplaceholders;
 
-public enum EStatus {
+public enum VoiceStatus {
 	TALKING("talking"),
 	WHISPERING("whispering"),
 	QUIET("quiet"),
@@ -9,7 +9,7 @@ public enum EStatus {
 
 	public final String key;
 
-	EStatus(String key) {
+	VoiceStatus(String key) {
 		this.key = key;
 	}
 }

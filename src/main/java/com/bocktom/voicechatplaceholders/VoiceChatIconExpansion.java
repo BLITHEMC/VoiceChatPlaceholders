@@ -6,27 +6,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class VoiceChatIconExpansion extends PlaceholderExpansion {
+    @Override
+    public @NotNull String getIdentifier() {
+        return "vcicon";
+    }
 
-	@Override
-	public @NotNull String getIdentifier() {
-		return "vcicon";
-	}
+    @Override
+    public @NotNull String getAuthor() {
+        return "Tommm";
+    }
 
-	@Override
-	public @NotNull String getAuthor() {
-		return "Tommm";
-	}
+    @Override
+    public @NotNull String getVersion() {
+        return "1.0";
+    }
 
-	@Override
-	public @NotNull String getVersion() {
-		return "1.0";
-	}
+    @Override
+    public @Nullable String onPlaceholderRequest(Player player, @NotNull String raw) {
+        if (player == null) {
+            return "";
+        }
+        return VoiceChatPlaceholders.plugin.getStatusPlaceholder(player.getUniqueId());
+    }
 
-	@Override
-	public @Nullable String onPlaceholderRequest(Player player, @NotNull String raw) {
-		if(player == null) {
-			return "";
-		}
-		return VoiceChatPlaceholders.plugin.getStatusPlaceholder(player.getUniqueId());
-	}
+    @Override
+    public boolean persist() {
+        return true;
+    }
 }
