@@ -1,7 +1,9 @@
-package com.bocktom.voicechatplaceholders;
+package io.github.poeticrainbow.voicechatplaceholders.voicechat;
 
 import de.maxhenkel.voicechat.api.*;
 import de.maxhenkel.voicechat.api.events.*;
+import io.github.poeticrainbow.voicechatplaceholders.Statuses;
+import io.github.poeticrainbow.voicechatplaceholders.VoiceChatPlaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.bukkit.Bukkit.getLogger;
 
 public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
-
     private final VoiceChatPlaceholders plugin;
     private VoicechatServerApi api;
 
@@ -28,7 +29,7 @@ public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
 
     @Override
     public String getPluginId() {
-        return "phoenix_voicechat_icon";
+        return "voicechatplaceholders";
     }
 
     @Override
@@ -42,7 +43,6 @@ public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
         );
     }
 
-
     @Override
     public void registerEvents(EventRegistration registration) {
         getLogger().info("Registering Voicechat events...");
@@ -55,13 +55,11 @@ public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
     }
 
     private void onMicrophoneEvent(MicrophonePacketEvent event) {
-        if (event.getSenderConnection() == null)
-            return;
+        if (event.getSenderConnection() == null) return;
 
         ServerPlayer player = event.getSenderConnection().getPlayer();
 
-        if (player == null)
-            return;
+        if (player == null) return;
 
         LAST_PACKET.put(player.getUuid(), System.currentTimeMillis());
     }
@@ -75,24 +73,34 @@ public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
         IN_VC.remove(event.getPlayerUuid());
     }
 
-    private void onEvent(ServerEvent serverEvent) {
-        getLogger().info("Voicechat event: " + serverEvent.getClass().getSimpleName());
-    }
-
-    public VoiceStatus getStatus(UUID target) {
+    public Statuses.VoiceStatus getVoiceStatus(UUID target) {
         VoicechatConnection connection = api.getConnectionOf(target);
 
-        if (connection == null || connection.isDisabled()) return VoiceStatus.DISABLED;
-        if (!connection.isInstalled()) return VoiceStatus.NOT_INSTALLED;
+        if (connection == null || !connection.isInstalled()) return Statuses.VoiceStatus.DISCONNECTED;
+        if (connection.isDisabled()) return Statuses.VoiceStatus.DEAFENED;
 
         Player player = Bukkit.getPlayer(target);
-        if (player == null || !IN_VC.contains(target)) return VoiceStatus.DISABLED;
+        if (player == null || !IN_VC.contains(target)) return Statuses.VoiceStatus.DEAFENED;
 
         Long lastPacket = LAST_PACKET.get(target);
         boolean isTalking = lastPacket != null && (System.currentTimeMillis() - lastPacket) <= TALK_TIMEOUT_MS;
-        if (!isTalking) return VoiceStatus.QUIET;
+        if (!isTalking) return Statuses.VoiceStatus.QUIET;
 
-        return player.isSneaking() ? VoiceStatus.WHISPERING : VoiceStatus.TALKING;
+        return player.isSneaking() ? Statuses.VoiceStatus.WHISPERING : Statuses.VoiceStatus.TALKING;
+    }
+
+    public Statuses.GroupStatus getGroupStatus(UUID target) {
+        VoicechatConnection connection = api.getConnectionOf(target);
+
+        if (connection != null && connection.isInGroup()) {
+            var group = connection.getGroup();
+            if (group != null && !group.isHidden()) {
+                if (group.getType().equals(Group.Type.NORMAL)) return Statuses.GroupStatus.NORMAL_GROUP;
+                if (group.getType().equals(Group.Type.OPEN)) return Statuses.GroupStatus.OPEN_GROUP;
+                if (group.getType().equals(Group.Type.ISOLATED)) return Statuses.GroupStatus.ISOLATED_GROUP;
+            }
+        }
+        return Statuses.GroupStatus.NOT_IN_GROUP;
     }
 
     private void onVCStopped(VoicechatServerStoppedEvent voicechatServerStoppedEvent) {

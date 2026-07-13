@@ -1,6 +1,8 @@
-package com.bocktom.voicechatplaceholders;
+package io.github.poeticrainbow.voicechatplaceholders;
 
 import de.maxhenkel.voicechat.api.BukkitVoicechatService;
+import io.github.poeticrainbow.voicechatplaceholders.papi.VoiceChatIconExpansion;
+import io.github.poeticrainbow.voicechatplaceholders.voicechat.VoiceChatPlaceholdersPlugin;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +28,10 @@ public final class VoiceChatPlaceholders extends JavaPlugin implements CommandEx
             getLogger().severe("Could not load VoiceChat service!");
             getServer().getPluginManager().disablePlugin(this);
         }
-        new VoiceChatIconExpansion().register();
+        var registered = new VoiceChatIconExpansion().register();
+        if (!registered) {
+            getLogger().severe("The PlaceholderAPI expansion failed to be registered!");
+        }
 
         // Command
         getLifecycleManager().registerEventHandler(
@@ -37,12 +42,24 @@ public final class VoiceChatPlaceholders extends JavaPlugin implements CommandEx
         );
     }
 
-    public String getIconForStatus(VoiceStatus status) {
+    public String getIconForVoiceStatus(Statuses.VoiceStatus status) {
+        return getConfig().getString(status.key);
+    }
+
+    public String getIconForGroupStatus(Statuses.GroupStatus status) {
         return getConfig().getString(status.key);
     }
 
     public String getStatusPlaceholder(UUID uniqueId) {
-        return getIconForStatus(voicechatPlugin.getStatus(uniqueId));
+        return getVoiceStatusPlaceholder(uniqueId) + getGroupStatusPlaceholder(uniqueId);
+    }
+
+    public String getVoiceStatusPlaceholder(UUID uniqueId) {
+        return getIconForVoiceStatus(voicechatPlugin.getVoiceStatus(uniqueId));
+    }
+
+    public String getGroupStatusPlaceholder(UUID uniqueId) {
+        return getIconForGroupStatus(voicechatPlugin.getGroupStatus(uniqueId));
     }
 
     public void loadConfigFromFile() {
