@@ -3,7 +3,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
-group = 'com.bocktom'
+group = 'io.github.poeticrainbow'
 version = project.plugin_version + "+" + project.paper_version
 description = 'VoiceChatPlaceholders'
 
