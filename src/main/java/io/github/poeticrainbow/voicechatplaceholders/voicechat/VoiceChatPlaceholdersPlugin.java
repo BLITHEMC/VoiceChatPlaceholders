@@ -103,6 +103,10 @@ public class VoiceChatPlaceholdersPlugin implements VoicechatPlugin {
         return Statuses.GroupStatus.NOT_IN_GROUP;
     }
 
+    public int getConnectedPlayerCount() {
+        return IN_VC.size();
+    }
+
     private void onVCStopped(VoicechatServerStoppedEvent voicechatServerStoppedEvent) {
         getLogger().info("Voicechat event: " + voicechatServerStoppedEvent.getClass().getSimpleName());
     }

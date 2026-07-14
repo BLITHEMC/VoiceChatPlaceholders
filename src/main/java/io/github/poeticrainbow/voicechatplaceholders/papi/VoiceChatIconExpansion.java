@@ -1,6 +1,7 @@
 package io.github.poeticrainbow.voicechatplaceholders.papi;
 
 import io.github.poeticrainbow.voicechatplaceholders.Statuses;
+import io.github.poeticrainbow.voicechatplaceholders.VoiceChatPlaceholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -47,8 +48,11 @@ public class VoiceChatIconExpansion extends PlaceholderExpansion {
                 }
                 return plugin.getGroupStatusPlaceholder(player.getUniqueId());
             }
+            case "players" -> {
+                return String.valueOf(VoiceChatPlaceholders.plugin.getConnectedPlayerCount());
+            }
             default -> {
-                return String.format("Usage: %%%s_(status|voice_status|group_status)%%", PREFIX);
+                return String.format("Usage: %%%s_(status|voice_status|group_status|players)%%", PREFIX);
             }
         }
     }

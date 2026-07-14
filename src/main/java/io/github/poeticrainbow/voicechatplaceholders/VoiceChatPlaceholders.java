@@ -62,6 +62,13 @@ public final class VoiceChatPlaceholders extends JavaPlugin implements CommandEx
         return getIconForGroupStatus(voicechatPlugin.getGroupStatus(uniqueId));
     }
 
+    public int getConnectedPlayerCount() {
+        if (voicechatPlugin != null) {
+            return voicechatPlugin.getConnectedPlayerCount();
+        }
+        return 0;
+    }
+
     public void loadConfigFromFile() {
         saveDefaultConfig();
         reloadConfig();
